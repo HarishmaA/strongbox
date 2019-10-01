@@ -1,25 +1,27 @@
 package org.carlspring.strongbox.rest.common;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.carlspring.strongbox.rest.client.RestAssuredArtifactClient.OK;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.File;
+import org.carlspring.strongbox.rest.client.RestAssuredArtifactClient;
 
 import javax.inject.Inject;
-
-import org.carlspring.strongbox.rest.client.RestAssuredArtifactClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.web.context.WebApplicationContext;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.Locale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.module.mockmvc.config.RestAssuredMockMvcConfig;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.SpringSecurityMessageSource;
+import org.springframework.web.context.WebApplicationContext;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.carlspring.strongbox.rest.client.RestAssuredArtifactClient.OK;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * General settings for the testing sub-system.
@@ -28,6 +30,7 @@ import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
  */
 public abstract class RestAssuredBaseTest
 {
+    protected static final String UNAUTHORIZED_MESSAGE_CODE = "ExceptionTranslationFilter.insufficientAuthentication";
 
     public final static int DEFAULT_PORT = 48080;
 
@@ -39,6 +42,8 @@ public abstract class RestAssuredBaseTest
      * Share logger instance across all tests.
      */
     protected final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
+    private final MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
     @Inject
     protected WebApplicationContext context;
@@ -127,6 +132,18 @@ public abstract class RestAssuredBaseTest
     protected void assertPathExists(String url)
     {
         assertTrue(pathExists(url), "Path " + url + " doesn't exist.");
+    }
+
+    protected String getI18nInsufficientAuthenticationErrorMessage()
+    {
+        String defaultErrorMessage = messages.getMessage(UNAUTHORIZED_MESSAGE_CODE,
+                                                         Locale.ENGLISH);
+
+        String errorMessage = messages.getMessage(UNAUTHORIZED_MESSAGE_CODE,
+                                                  defaultErrorMessage);
+
+        return new String(errorMessage.getBytes(ISO_8859_1),
+                          Charset.defaultCharset());
     }
 
 }

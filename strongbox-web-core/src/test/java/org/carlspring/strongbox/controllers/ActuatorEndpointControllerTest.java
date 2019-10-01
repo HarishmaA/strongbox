@@ -4,6 +4,8 @@ import org.carlspring.strongbox.booters.PropertiesBooter;
 import org.carlspring.strongbox.config.IntegrationTest;
 import org.carlspring.strongbox.rest.common.RestAssuredBaseTest;
 
+import javax.inject.Inject;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
-
-import javax.inject.Inject;
-
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -26,7 +25,6 @@ import static org.hamcrest.Matchers.notNullValue;
 public class ActuatorEndpointControllerTest
         extends RestAssuredBaseTest
 {
-    private final String UNAUTHORIZED_MESSAGE = "Full authentication is required to access this resource";
 
     private static final String LOGGER_PACKAGE = "org.carlspring.strongbox";
 
@@ -101,7 +99,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -130,7 +128,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -159,7 +157,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -201,7 +199,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -230,7 +228,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -260,7 +258,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -289,7 +287,7 @@ public class ActuatorEndpointControllerTest
                .peek()
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -329,7 +327,7 @@ public class ActuatorEndpointControllerTest
                .get(url)
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 
     @Test
@@ -356,6 +354,6 @@ public class ActuatorEndpointControllerTest
                .get(url)
                .then()
                .statusCode(HttpStatus.UNAUTHORIZED.value())
-               .body("error", CoreMatchers.equalTo(UNAUTHORIZED_MESSAGE));
+               .body("error", CoreMatchers.equalTo(getI18nInsufficientAuthenticationErrorMessage()));
     }
 }
